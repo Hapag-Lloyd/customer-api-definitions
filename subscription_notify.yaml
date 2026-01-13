@@ -11,7 +11,7 @@ info:
 paths:
     /notify:
         post:
-          summary: Receive subscription notification
+          summary: Receive subscription notification. The data is sent as JSON and may be compressed. Check the "Content-Encoding: gzip" header.
           tags:
             - RateSheetSubscriptionNotification
           description: Endpoint to receive subscription notifications.
