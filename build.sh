@@ -36,7 +36,8 @@ for submodule_dir in "$GENERATED_DIR"/*; do
 
         # copy the whole target/generated-sources/openapi directory into the sub module
         echo "  Copying generated sources to $target_dir..."
-        rsync -av --delete "$submodule_dir/" "$target_dir/"
+        rm -rf "$target_dir"
+        cp -r "$submodule_dir" "$target_dir"
 
         # modify the pom.xml using xmlstarlet
         if [ -f "$target_dir/pom.xml" ]; then
@@ -58,6 +59,11 @@ for submodule_dir in "$GENERATED_DIR"/*; do
             # Remove version element from project (inherited from parent)
             xmlstarlet ed \
                 -d "//*[local-name()='project']/*[local-name()='version']" \
+                "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
+
+            # Remove groupId element from project (inherited from parent)
+            xmlstarlet ed \
+                -d "//*[local-name()='project']/*[local-name()='groupId']" \
                 "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
 
             # overwrite the scm section with master
