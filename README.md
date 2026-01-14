@@ -3,6 +3,9 @@
 This repository contains all API definitions which are useful for our customers. At the moment the plain OpenAPI definitions are
 published here and also made available as a Maven artifact.
 
+The generated clients can be downloaded as separate Maven artifacts for each API definition. They are generated for Java 8 and
+above.
+
 ```xml
 <dependency>
     <groupId>com.hlag.api</groupId>
@@ -77,7 +80,8 @@ The Maven Invoker Plugin compiles all generated submodules:
 
 #### 5. Packaging
 
-The final step packages all OpenAPI specifications and generated code into a single artifact that can be published to Maven Central for customer consumption.
+The final step packages all OpenAPI specifications and generated code into a single artifact that can be published to Maven Central
+for customer consumption.
 
 ## License
 
