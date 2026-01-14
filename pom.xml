@@ -230,6 +230,32 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-invoker-plugin</artifactId>
+                <version>3.6.0</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>compile-submodules</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <pom>${project.basedir}/pom.xml</pom>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                            <skipInvocation>false</skipInvocation>
+                            <streamLogs>true</streamLogs>
+                            <pomIncludes>
+                                <pomInclude>*/pom.xml</pomInclude>
+                            </pomIncludes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.5.0</version>
                 <configuration>

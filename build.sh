@@ -2,7 +2,7 @@
 
 set -e
 
-echo "Starting OpenAPI code generation and submodule setup..."
+echo "Maven submodule setup..."
 
 # Define parent project details for XML manipulation
 PARENT_GROUP_ID="com.hlag.api"
