@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.hlag.fis.api</groupId>
-    <artifactId>api-base</artifactId>
+    <groupId>com.hlag.api</groupId>
+    <artifactId>openapi-specs</artifactId>
     <!-- do not change this version. Done by the workflow before pushing the artifact to Maven Central -->
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -108,9 +108,9 @@
                             <output>${project.build.directory}/openapi/ratesheet-api-java-resttemplate</output>
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
-                            <packageName>com.hlag.fis.api.ratesheet.subscription</packageName>
-                            <modelPackage>com.hlag.fis.api.ratesheet.subscription.model</modelPackage>
-                            <apiPackage>com.hlag.fis.api.ratesheet.subscription</apiPackage>
+                            <packageName>com.hlag.api.ratesheet.subscription</packageName>
+                            <modelPackage>com.hlag.api.ratesheet.subscription.model</modelPackage>
+                            <apiPackage>com.hlag.api.ratesheet.subscription</apiPackage>
                             <modelNameSuffix>DTO</modelNameSuffix>
                             <artifactId>api-ratesheet-resttemplate</artifactId>
                             <addCompileSourceRoot>false</addCompileSourceRoot>
@@ -155,7 +155,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.outputDirectory}/openapi</outputDirectory>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${project.basedir}/src/main/openapi</directory>
