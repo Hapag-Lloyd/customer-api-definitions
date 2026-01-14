@@ -1,0 +1,14 @@
+---
+name: Release Test
+
+# yamllint disable-line rule:truthy
+on:
+  push:
+    branches:
+      - release-dry-run
+
+jobs:
+  default:
+    # yamllint disable-line rule:line-length
+    uses: Hapag-Lloyd/Workflow-Templates/.github/workflows/maven_release_dry_run_callable.yml@6f95ddd7e6f8f434143b1ee76987745965b37500 # 1.22.73
+    secrets: inherit

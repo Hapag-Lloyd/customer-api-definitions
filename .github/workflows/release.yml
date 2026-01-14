@@ -1,0 +1,14 @@
+---
+name: Release
+
+# yamllint disable-line rule:truthy
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  default:
+    # yamllint disable-line rule:line-length
+    uses: Hapag-Lloyd/Workflow-Templates/.github/workflows/maven_release_callable.yml@6f95ddd7e6f8f434143b1ee76987745965b37500 # 1.22.73
+    secrets: inherit
