@@ -4,10 +4,6 @@ set -e
 
 echo "Starting OpenAPI code generation and submodule setup..."
 
-# generates the OpenAPI sub modules
-echo "Running Maven clean package to generate OpenAPI sources..."
-mvn clean package
-
 # Define parent project details for XML manipulation
 PARENT_GROUP_ID="com.hlag.api"
 PARENT_ARTIFACT_ID="openapi-specs"
@@ -31,14 +27,6 @@ for submodule_dir in "$GENERATED_DIR"/*; do
         target_dir="$submodule_name"
 
         echo "Processing submodule: $submodule_name"
-
-        # Create target directory if it doesn't exist
-        mkdir -p "$target_dir"
-
-        # copy the whole target/generated-sources/openapi directory into the sub module
-        echo "  Copying generated sources to $target_dir..."
-        rm -rf "$target_dir"
-        cp -r "$submodule_dir" "$target_dir"
 
         # modify the pom.xml using xmlstarlet
         if [ -f "$target_dir/pom.xml" ]; then
