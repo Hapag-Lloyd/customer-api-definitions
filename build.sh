@@ -12,6 +12,7 @@ mvn clean package
 PARENT_GROUP_ID="com.hlag.api"
 PARENT_ARTIFACT_ID="openapi-specs"
 PARENT_VERSION="1.0.0-SNAPSHOT"
+PARENT_POM="pom.xml"
 
 # Get the list of generated submodules
 GENERATED_DIR="target/generated-sources/openapi"
@@ -66,32 +67,100 @@ for submodule_dir in "$GENERATED_DIR"/*; do
                 -d "//*[local-name()='project']/*[local-name()='groupId']" \
                 "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
 
-            # overwrite the scm section with master
-            xmlstarlet ed \
-                -d "//*[local-name()='scm']" \
-                -s "//*[local-name()='project']" -t elem -n "scm" \
-                -s "//*[local-name()='scm']" -t elem -n "connection" -v "scm:git:git://github.com/Hapag-Lloyd/customer-api-definitions" \
-                -s "//*[local-name()='scm']" -t elem -n "developerConnection" -v "scm:git:ssh://gitHub.com:Hapag-Lloyd/customer-api-definitions.git" \
-                -s "//*[local-name()='scm']" -t elem -n "url" -v "https://github.com/Hapag-Lloyd/customer-api-definitions/tree/main" \
-                "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
+            # Extract and copy SCM section from parent POM
+            echo "  Copying SCM section from parent POM..."
+            if xmlstarlet sel -t -c "//*[local-name()='scm']" "$PARENT_POM" > /dev/null 2>&1; then
+                # Extract SCM values from parent
+                SCM_CONNECTION=$(xmlstarlet sel -t -v "//*[local-name()='scm']/*[local-name()='connection']" "$PARENT_POM" 2>/dev/null || echo "")
+                SCM_DEV_CONNECTION=$(xmlstarlet sel -t -v "//*[local-name()='scm']/*[local-name()='developerConnection']" "$PARENT_POM" 2>/dev/null || echo "")
+                SCM_URL=$(xmlstarlet sel -t -v "//*[local-name()='scm']/*[local-name()='url']" "$PARENT_POM" 2>/dev/null || echo "")
 
-            # overwrite the license section with master
-            xmlstarlet ed \
-                -d "//*[local-name()='licenses']" \
-                -s "//*[local-name()='project']" -t elem -n "licenses" \
-                -s "//*[local-name()='licenses']" -t elem -n "license" \
-                -s "//*[local-name()='license']" -t elem -n "name" -v "Apache 2.0" \
-                -s "//*[local-name()='license']" -t elem -n "url" -v "https://github.com/Hapag-Lloyd/customer-api-definitions/blob/main/LICENSE" \
-                "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
+                # Remove existing SCM section and add new one with parent values
+                xmlstarlet ed \
+                    -d "//*[local-name()='scm']" \
+                    -s "//*[local-name()='project']" -t elem -n "scm" \
+                    "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
+
+                # Add SCM elements if they exist in parent
+                if [ -n "$SCM_CONNECTION" ]; then
+                    xmlstarlet ed \
+                        -s "//*[local-name()='scm']" -t elem -n "connection" -v "$SCM_CONNECTION" \
+                        "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
+                fi
+                if [ -n "$SCM_DEV_CONNECTION" ]; then
+                    xmlstarlet ed \
+                        -s "//*[local-name()='scm']" -t elem -n "developerConnection" -v "$SCM_DEV_CONNECTION" \
+                        "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
+                fi
+                if [ -n "$SCM_URL" ]; then
+                    xmlstarlet ed \
+                        -s "//*[local-name()='scm']" -t elem -n "url" -v "$SCM_URL" \
+                        "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
+                fi
+            fi
+
+            # Extract and copy licenses section from parent POM
+            echo "  Copying licenses section from parent POM..."
+            if xmlstarlet sel -t -c "//*[local-name()='licenses']" "$PARENT_POM" > /dev/null 2>&1; then
+                # Extract license information from parent
+                LICENSE_NAME=$(xmlstarlet sel -t -v "//*[local-name()='licenses']/*[local-name()='license']/*[local-name()='name']" "$PARENT_POM" 2>/dev/null || echo "")
+                LICENSE_URL=$(xmlstarlet sel -t -v "//*[local-name()='licenses']/*[local-name()='license']/*[local-name()='url']" "$PARENT_POM" 2>/dev/null || echo "")
+
+                # Remove existing licenses section and add new one with parent values
+                xmlstarlet ed \
+                    -d "//*[local-name()='licenses']" \
+                    -s "//*[local-name()='project']" -t elem -n "licenses" \
+                    -s "//*[local-name()='licenses']" -t elem -n "license" \
+                    "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
+
+                # Add license elements if they exist in parent
+                if [ -n "$LICENSE_NAME" ]; then
+                    xmlstarlet ed \
+                        -s "//*[local-name()='license']" -t elem -n "name" -v "$LICENSE_NAME" \
+                        "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
+                fi
+                if [ -n "$LICENSE_URL" ]; then
+                    xmlstarlet ed \
+                        -s "//*[local-name()='license']" -t elem -n "url" -v "$LICENSE_URL" \
+                        "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
+                fi
+            fi
+
+            # Extract and copy developers section from parent POM
+            echo "  Copying developers section from parent POM..."
+            if xmlstarlet sel -t -c "//*[local-name()='developers']" "$PARENT_POM" > /dev/null 2>&1; then
+                # Extract developer information from parent
+                DEV_ORGANIZATION=$(xmlstarlet sel -t -v "//*[local-name()='developers']/*[local-name()='developer']/*[local-name()='organization']" "$PARENT_POM" 2>/dev/null || echo "")
+                DEV_ORG_URL=$(xmlstarlet sel -t -v "//*[local-name()='developers']/*[local-name()='developer']/*[local-name()='organizationUrl']" "$PARENT_POM" 2>/dev/null || echo "")
+
+                # Remove existing developers section and add new one with parent values
+                xmlstarlet ed \
+                    -d "//*[local-name()='developers']" \
+                    -s "//*[local-name()='project']" -t elem -n "developers" \
+                    -s "//*[local-name()='developers']" -t elem -n "developer" \
+                    "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
+
+                # Add developer elements if they exist in parent
+                if [ -n "$DEV_ORGANIZATION" ]; then
+                    xmlstarlet ed \
+                        -s "//*[local-name()='developer']" -t elem -n "organization" -v "$DEV_ORGANIZATION" \
+                        "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
+                fi
+                if [ -n "$DEV_ORG_URL" ]; then
+                    xmlstarlet ed \
+                        -s "//*[local-name()='developer']" -t elem -n "organizationUrl" -v "$DEV_ORG_URL" \
+                        "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
+                fi
+            else
+                # Remove existing developers section if parent doesn't have one
+                xmlstarlet ed \
+                    -d "//*[local-name()='developers']" \
+                    "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
+            fi
 
             # remove all properties
             xmlstarlet ed \
                 -d "//*[local-name()='properties']" \
-                "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
-
-            # Remove developers section (inherited from parent)
-            xmlstarlet ed \
-                -d "//*[local-name()='developers']" \
                 "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
 
             # Remove url element (not needed in submodules)
