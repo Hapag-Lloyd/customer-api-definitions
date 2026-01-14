@@ -27,3 +27,5 @@ jobs:
           sudo apt-get install xmlstarlet
 
           mvn -B package --file pom.xml
+
+          find . -name "*.jar" -exec echo "Built JAR: {}" \;
