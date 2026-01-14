@@ -175,5 +175,3 @@ for submodule_dir in "$GENERATED_DIR"/*; do
         echo "  - $(basename "$submodule_dir")"
     fi
 done
-
-mvn package
