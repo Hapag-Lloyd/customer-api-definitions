@@ -158,11 +158,6 @@ for submodule_dir in "$GENERATED_DIR"/*; do
                     "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
             fi
 
-            # remove all properties
-            xmlstarlet ed \
-                -d "//*[local-name()='properties']" \
-                "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
-
             # Remove url element (not needed in submodules)
             xmlstarlet ed \
                 -d "//*[local-name()='project']/*[local-name()='url']" \
@@ -192,3 +187,5 @@ for submodule_dir in "$GENERATED_DIR"/*; do
         echo "  - $(basename "$submodule_dir")"
     fi
 done
+
+mvn package
