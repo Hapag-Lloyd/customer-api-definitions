@@ -52,43 +52,6 @@
         </repository>
     </distributionManagement>
 
-    <profiles>
-        <profile>
-            <id>release</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.2.8</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.central</groupId>
-                        <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>0.8.0</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <publishingServerId>ossrh</publishingServerId>
-                            <autoPublish>true</autoPublish>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
     <build>
         <pluginManagement>
             <plugins>
@@ -106,34 +69,6 @@
         </pluginManagement>
 
         <plugins>
-            <plugin>
-                <!-- generates a full Maven project including POM, sources, javadocs, tests etc. from OpenAPI specifications -->
-                <groupId>org.openapitools</groupId>
-                <artifactId>openapi-generator-maven-plugin</artifactId>
-                <inherited>false</inherited>
-                <executions>
-                    <execution>
-                        <id>generate-ratesheet-api-java-resttemplate</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpecRootDirectory>${project.basedir}/src/main/openapi/ratesheet</inputSpecRootDirectory>
-                            <output>${project.build.directory}/generated-sources/openapi/ratesheet-api-java-resttemplate</output>
-                            <generatorName>java</generatorName>
-                            <library>resttemplate</library>
-                            <packageName>com.hlag.api.ratesheet.subscription</packageName>
-                            <modelPackage>com.hlag.api.ratesheet.subscription.model</modelPackage>
-                            <apiPackage>com.hlag.api.ratesheet.subscription</apiPackage>
-                            <modelNameSuffix>DTO</modelNameSuffix>
-                            <artifactId>api-ratesheet-resttemplate</artifactId>
-                            <addCompileSourceRoot>false</addCompileSourceRoot>
-                            <generateApiTests>false</generateApiTests>
-                            <generateModelTests>false</generateModelTests>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
@@ -156,6 +91,34 @@
                     <failOnNoGitDirectory>true</failOnNoGitDirectory>
                     <generateGitPropertiesFile>true</generateGitPropertiesFile>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>generate-ratesheet-api-java-resttemplate</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpecRootDirectory>${project.basedir}/src/main/openapi/ratesheet</inputSpecRootDirectory>
+                            <output>${project.build.directory}/generated-sources/openapi/ratesheet-api-java-resttemplate</output>
+                            <generatorName>java</generatorName>
+                            <library>resttemplate</library>
+                            <packageName>com.hlag.api.ratesheet.subscription</packageName>
+                            <modelPackage>com.hlag.api.ratesheet.subscription.model</modelPackage>
+                            <apiPackage>com.hlag.api.ratesheet.subscription</apiPackage>
+                            <modelNameSuffix>DTO</modelNameSuffix>
+                            <artifactId>api-ratesheet-resttemplate</artifactId>
+                            <addCompileSourceRoot>false</addCompileSourceRoot>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -214,42 +177,16 @@
                 <executions>
                     <execution>
                         <id>run-build-script</id>
-                        <phase>compile</phase>
+                        <phase>process-sources</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
                         <configuration>
                             <executable>bash</executable>
-                            <workingDirectory>${project.parent.basedir}</workingDirectory>
+                            <workingDirectory>${project.basedir}</workingDirectory>
                             <arguments>
                                 <argument>build.sh</argument>
                             </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-invoker-plugin</artifactId>
-                <version>3.6.0</version>
-                <inherited>false</inherited>
-                <executions>
-                    <execution>
-                        <id>compile-submodules</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <pom>${project.basedir}/pom.xml</pom>
-                            <goals>
-                                <goal>compile</goal>
-                            </goals>
-                            <skipInvocation>false</skipInvocation>
-                            <streamLogs>true</streamLogs>
-                            <pomIncludes>
-                                <pomInclude>*/pom.xml</pomInclude>
-                            </pomIncludes>
                         </configuration>
                     </execution>
                 </executions>
@@ -269,4 +206,41 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.2.8</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.8.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>ossrh</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
