@@ -16,6 +16,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>8</maven.compiler.release>
+        <skipCompilation>false</skipCompilation>
     </properties>
 
     <modules>
@@ -53,6 +54,14 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <skip>${skipCompilation}</skip>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
                 <version>4.9.10</version>
@@ -84,6 +93,11 @@
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
+
+            <properties>
+                <skipCompilation>true</skipCompilation>
+            </properties>
+
             <build>
                 <pluginManagement>
                     <plugins>
