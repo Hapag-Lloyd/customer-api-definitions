@@ -185,7 +185,7 @@
                                 <pomInclude>*/pom.xml</pomInclude>
                             </pomIncludes>
                             <goals>
-                                <goal>compile</goal>
+                                <goal>package</goal>
                             </goals>
                             <streamLogs>true</streamLogs>
                             <skipInvocation>${invoker.skip}</skipInvocation>
