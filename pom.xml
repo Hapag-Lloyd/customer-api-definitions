@@ -4,19 +4,20 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.hlag.fis</groupId>
-    <artifactId>api</artifactId>
+    <groupId>com.hlag.api</groupId>
+    <artifactId>openapi-specs</artifactId>
     <!-- do not change this version. Done by the workflow before pushing the artifact to Maven Central -->
     <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <name>API Definitions</name>
     <description>Swagger / OpenAPI definitions for Customer APIs called by Hapag-Lloyd.</description>
     <url>https://github.com/Hapag-Lloyd/customer-api-definitions</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>24</maven.compiler.source>
-        <maven.compiler.target>24</maven.compiler.target>
-        <maven.compiler.release>24</maven.compiler.release>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.release>8</maven.compiler.release>
     </properties>
 
     <licenses>
@@ -87,28 +88,35 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.4.0</version>
+                <!-- generates a full Maven project including POM, sources, javadocs, tests etc. from OpenAPI specifications -->
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.18.0</version>
+                <configuration>
+                    <groupId>${project.groupId}</groupId>
+                    <mergedFileName>merged-apis</mergedFileName>
+                </configuration>
                 <executions>
                     <execution>
-                        <id>attach-sources</id>
+                        <id>generate-ratesheet-api-java-resttemplate</id>
+                        <phase>validate</phase>
                         <goals>
-                            <goal>jar-no-fork</goal>
+                            <goal>generate</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.12.0</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
+                        <configuration>
+                            <inputSpecRootDirectory>${project.basedir}/src/main/openapi/ratesheet</inputSpecRootDirectory>
+                            <output>${project.build.directory}/openapi/ratesheet-api-java-resttemplate</output>
+                            <generatorName>java</generatorName>
+                            <library>resttemplate</library>
+                            <packageName>com.hlag.api.ratesheet.subscription</packageName>
+                            <modelPackage>com.hlag.api.ratesheet.subscription.model</modelPackage>
+                            <apiPackage>com.hlag.api.ratesheet.subscription</apiPackage>
+                            <modelNameSuffix>DTO</modelNameSuffix>
+                            <artifactId>api-ratesheet-resttemplate</artifactId>
+                            <addCompileSourceRoot>false</addCompileSourceRoot>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -137,39 +145,47 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-openapi-specs</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/src/main/openapi</directory>
+                                    <includes>
+                                        <include>**/*.yaml</include>
+                                        <include>**/*.yml</include>
+                                        <include>**/*.json</include>
+                                    </includes>
+                                    <excludes>
+                                        <exclude>**/merged-apis.yaml</exclude>
+                                    </excludes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.5.0</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.4</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.5.4</version>
+                <configuration>
+                    <includes>
+                        <include>**/*</include>
+                    </includes>
+                    <archive>
+                        <addMavenDescriptor>true</addMavenDescriptor>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
     </build>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.junit</groupId>
-                <artifactId>junit-bom</artifactId>
-                <version>6.0.2</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 </project>
