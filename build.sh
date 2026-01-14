@@ -5,10 +5,32 @@ set -e
 echo "Maven submodule setup..."
 
 # Define parent project details for XML manipulation
-PARENT_GROUP_ID="com.hlag.api"
-PARENT_ARTIFACT_ID="openapi-specs"
-PARENT_VERSION="1.0.0-SNAPSHOT"
 PARENT_POM="pom.xml"
+
+# Extract parent project details dynamically from the master pom.xml
+echo "Reading parent project details from $PARENT_POM..."
+if [ ! -f "$PARENT_POM" ]; then
+    echo "Error: Parent POM file not found: $PARENT_POM"
+    exit 1
+fi
+
+PARENT_GROUP_ID=$(xmlstarlet sel -t -v "//*[local-name()='project']/*[local-name()='groupId']" "$PARENT_POM" 2>/dev/null || echo "")
+PARENT_ARTIFACT_ID=$(xmlstarlet sel -t -v "//*[local-name()='project']/*[local-name()='artifactId']" "$PARENT_POM" 2>/dev/null || echo "")
+PARENT_VERSION=$(xmlstarlet sel -t -v "//*[local-name()='project']/*[local-name()='version']" "$PARENT_POM" 2>/dev/null || echo "")
+
+# Validate that we successfully extracted the parent project details
+if [ -z "$PARENT_GROUP_ID" ] || [ -z "$PARENT_ARTIFACT_ID" ] || [ -z "$PARENT_VERSION" ]; then
+    echo "Error: Failed to extract parent project details from $PARENT_POM"
+    echo "  GroupId: '$PARENT_GROUP_ID'"
+    echo "  ArtifactId: '$PARENT_ARTIFACT_ID'"
+    echo "  Version: '$PARENT_VERSION'"
+    exit 1
+fi
+
+echo "Parent project details:"
+echo "  GroupId: $PARENT_GROUP_ID"
+echo "  ArtifactId: $PARENT_ARTIFACT_ID"
+echo "  Version: $PARENT_VERSION"
 
 # Get the list of generated submodules
 GENERATED_DIR="target/generated-sources/openapi"
