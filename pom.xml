@@ -108,9 +108,9 @@
                             <output>${project.build.directory}/openapi/ratesheet-api-java-resttemplate</output>
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
-                            <packageName>com.hlag.fis.api.ratessheet.subscription</packageName>
-                            <modelPackage>com.hlag.fis.api.ratessheet.subscription.model</modelPackage>
-                            <apiPackage>com.hlag.fis.api.ratessheet.subscription</apiPackage>
+                            <packageName>com.hlag.fis.api.ratesheet.subscription</packageName>
+                            <modelPackage>com.hlag.fis.api.ratesheet.subscription.model</modelPackage>
+                            <apiPackage>com.hlag.fis.api.ratesheet.subscription</apiPackage>
                             <modelNameSuffix>DTO</modelNameSuffix>
                             <artifactId>api-ratesheet-resttemplate</artifactId>
                             <addCompileSourceRoot>false</addCompileSourceRoot>
