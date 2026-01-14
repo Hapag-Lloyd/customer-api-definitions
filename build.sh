@@ -178,6 +178,22 @@ for submodule_dir in "$GENERATED_DIR"/*; do
                 -d "//*[local-name()='project']/*[local-name()='description']" \
                 "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
 
+            # Add skip configuration to maven-compiler-plugin
+            echo "  Adding skip configuration to maven-compiler-plugin..."
+            if xmlstarlet sel -t -c "//*[local-name()='plugin'][*[local-name()='groupId']='org.apache.maven.plugins' and *[local-name()='artifactId']='maven-compiler-plugin']" "$target_dir/pom.xml" > /dev/null 2>&1; then
+                # Check if configuration section exists, if not create it
+                if ! xmlstarlet sel -t -c "//*[local-name()='plugin'][*[local-name()='groupId']='org.apache.maven.plugins' and *[local-name()='artifactId']='maven-compiler-plugin']/*[local-name()='configuration']" "$target_dir/pom.xml" > /dev/null 2>&1; then
+                    xmlstarlet ed \
+                        -s "//*[local-name()='plugin'][*[local-name()='groupId']='org.apache.maven.plugins' and *[local-name()='artifactId']='maven-compiler-plugin']" -t elem -n "configuration" \
+                        "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
+                fi
+
+                # Add skip element to configuration
+                xmlstarlet ed \
+                    -s "//*[local-name()='plugin'][*[local-name()='groupId']='org.apache.maven.plugins' and *[local-name()='artifactId']='maven-compiler-plugin']/*[local-name()='configuration']" -t elem -n "skip" -v "\${skipCompilation}" \
+                    "$target_dir/pom.xml" > "$target_dir/pom.xml.tmp" && mv "$target_dir/pom.xml.tmp" "$target_dir/pom.xml"
+            fi
+
             # Clean up backup
             rm -f "$target_dir/pom.xml.bak"
 
