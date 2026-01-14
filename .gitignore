@@ -3,3 +3,7 @@ target/
 
 # OpenAPI Generator
 merged-apis.yaml
+
+# generated sub modules
+ratesheet-api-java-resttemplate/
+!ratesheet-api-java-resttemplate/pom.xml
