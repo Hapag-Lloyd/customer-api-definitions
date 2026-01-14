@@ -113,7 +113,7 @@
                             <modelPackage>com.hlag.api.ratesheet.subscription.model</modelPackage>
                             <apiPackage>com.hlag.api.ratesheet.subscription</apiPackage>
                             <modelNameSuffix>DTO</modelNameSuffix>
-                            <artifactId>api-ratesheet-resttemplate</artifactId>
+                            <artifactId>ratesheet-resttemplate</artifactId>
                             <addCompileSourceRoot>false</addCompileSourceRoot>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
@@ -141,29 +141,6 @@
                                     <includes>
                                         <include>**/*</include>
                                     </includes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-openapi-specs</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.basedir}/src/main/openapi</directory>
-                                    <includes>
-                                        <include>**/*.yaml</include>
-                                        <include>**/*.yml</include>
-                                        <include>**/*.json</include>
-                                    </includes>
-                                    <excludes>
-                                        <exclude>**/merged-apis.yaml</exclude>
-                                    </excludes>
                                 </resource>
                             </resources>
                         </configuration>
