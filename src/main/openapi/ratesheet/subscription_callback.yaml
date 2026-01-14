@@ -17,6 +17,7 @@ paths:
       tags:
         - RateSheetSubscriptionNotification
       description: Endpoint to receive subscription notifications.
+      operationId: notify
       parameters:
         - in: header
           name: X-API-Version
