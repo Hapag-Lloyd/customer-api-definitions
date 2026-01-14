@@ -1,2 +1,5 @@
 # Java
 target/
+
+# OpenAPI Generator
+merged-apis.yaml
