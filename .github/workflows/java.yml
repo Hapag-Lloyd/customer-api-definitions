@@ -9,5 +9,5 @@ on: pull_request
 jobs:
   default:
     # yamllint disable-line rule:line-length
-    uses: Hapag-Lloyd/Workflow-Templates/.github/workflows/maven_java_callable.yml@1d69eff5b1f520d3fb3b553798c8248a8581d1d3 # 1.23.0
+    uses: Hapag-Lloyd/Workflow-Templates/.github/workflows/maven_java_callable.yml@853340bbf4dcdd84d678d286e062ccdf38c76974 # 1.24.1
     secrets: inherit

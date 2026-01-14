@@ -16,7 +16,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>8</maven.compiler.release>
-        <invoker.skip>false</invoker.skip>
+        <skipCompilation>false</skipCompilation>
     </properties>
 
     <modules>
@@ -52,22 +52,15 @@
     </distributionManagement>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <!-- generates a full Maven project including POM, sources, javadocs, tests etc. from OpenAPI specifications -->
-                    <groupId>org.openapitools</groupId>
-                    <artifactId>openapi-generator-maven-plugin</artifactId>
-                    <version>7.18.0</version>
-                    <configuration>
-                        <groupId>${project.groupId}</groupId>
-                        <mergedFileName>merged-apis</mergedFileName>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <skip>${skipCompilation}</skip>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
@@ -91,128 +84,116 @@
                     <generateGitPropertiesFile>true</generateGitPropertiesFile>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.openapitools</groupId>
-                <artifactId>openapi-generator-maven-plugin</artifactId>
-                <inherited>false</inherited>
-                <executions>
-                    <execution>
-                        <id>generate-ratesheet-api-java-resttemplate</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpecRootDirectory>${project.basedir}/src/main/openapi/ratesheet</inputSpecRootDirectory>
-                            <output>${project.build.directory}/generated-sources/openapi/ratesheet-api-java-resttemplate</output>
-                            <generatorName>java</generatorName>
-                            <library>resttemplate</library>
-                            <packageName>com.hlag.api.ratesheet.subscription</packageName>
-                            <modelPackage>com.hlag.api.ratesheet.subscription.model</modelPackage>
-                            <apiPackage>com.hlag.api.ratesheet.subscription</apiPackage>
-                            <modelNameSuffix>DTO</modelNameSuffix>
-                            <artifactId>ratesheet-resttemplate</artifactId>
-                            <addCompileSourceRoot>false</addCompileSourceRoot>
-                            <generateApiTests>false</generateApiTests>
-                            <generateModelTests>false</generateModelTests>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.3.1</version>
-                <inherited>false</inherited>
-                <executions>
-                    <execution>
-                        <id>copy-generated-openapi-sources</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.basedir}</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.build.directory}/generated-sources/openapi</directory>
-                                    <includes>
-                                        <include>**/*</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.1.0</version>
-                <inherited>false</inherited>
-                <executions>
-                    <execution>
-                        <id>run-build-script</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>bash</executable>
-                            <workingDirectory>${project.basedir}</workingDirectory>
-                            <arguments>
-                                <argument>build.sh</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-invoker-plugin</artifactId>
-                <version>3.6.0</version>
-                <inherited>false</inherited>
-                <executions>
-                    <execution>
-                        <id>compile-submodules</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <projectsDirectory>${project.basedir}</projectsDirectory>
-                            <pomIncludes>
-                                <pomInclude>*/pom.xml</pomInclude>
-                            </pomIncludes>
-                            <goals>
-                                <goal>package</goal>
-                            </goals>
-                            <streamLogs>true</streamLogs>
-                            <skipInvocation>${invoker.skip}</skipInvocation>
-                            <properties>
-                                <invoker.skip>true</invoker.skip>
-                            </properties>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.5.0</version>
-                <configuration>
-                    <includes>
-                        <include>**/*</include>
-                    </includes>
-                    <archive>
-                        <addMavenDescriptor>true</addMavenDescriptor>
-                    </archive>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 
     <profiles>
+        <profile>
+            <id>prepare</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+
+            <properties>
+                <skipCompilation>true</skipCompilation>
+            </properties>
+
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <!-- generates a full Maven project including POM, sources, javadocs, tests etc. from OpenAPI specifications -->
+                            <groupId>org.openapitools</groupId>
+                            <artifactId>openapi-generator-maven-plugin</artifactId>
+                            <version>7.18.0</version>
+                            <configuration>
+                                <groupId>${project.groupId}</groupId>
+                                <mergedFileName>merged-apis</mergedFileName>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+
+                <plugins>
+                    <plugin>
+                        <groupId>org.openapitools</groupId>
+                        <artifactId>openapi-generator-maven-plugin</artifactId>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <id>generate-ratesheet-api-java-resttemplate</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                                <configuration>
+                                    <inputSpecRootDirectory>${project.basedir}/src/main/openapi/ratesheet</inputSpecRootDirectory>
+                                    <output>${project.build.directory}/generated-sources/openapi/ratesheet-api-java-resttemplate</output>
+                                    <generatorName>java</generatorName>
+                                    <library>resttemplate</library>
+                                    <packageName>com.hlag.api.ratesheet.subscription</packageName>
+                                    <modelPackage>com.hlag.api.ratesheet.subscription.model</modelPackage>
+                                    <apiPackage>com.hlag.api.ratesheet.subscription</apiPackage>
+                                    <modelNameSuffix>DTO</modelNameSuffix>
+                                    <artifactId>ratesheet-resttemplate</artifactId>
+                                    <addCompileSourceRoot>false</addCompileSourceRoot>
+                                    <generateApiTests>false</generateApiTests>
+                                    <generateModelTests>false</generateModelTests>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <version>3.3.1</version>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <id>copy-generated-openapi-sources</id>
+                                <phase>process-sources</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.basedir}</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${project.build.directory}/generated-sources/openapi</directory>
+                                            <includes>
+                                                <include>**/*</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <id>run-build-script</id>
+                                <phase>process-sources</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>bash</executable>
+                                    <workingDirectory>${project.basedir}</workingDirectory>
+                                    <arguments>
+                                        <argument>build.sh</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>release</id>
             <activation>
