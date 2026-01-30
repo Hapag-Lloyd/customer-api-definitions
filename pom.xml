@@ -20,7 +20,7 @@
     </properties>
 
     <modules>
-        <module>ratesheet-api-v1-java-resttemplate</module>
+        <module>ratesheet-api-java-resttemplate</module>
     </modules>
 
     <licenses>
