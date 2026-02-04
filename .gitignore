@@ -5,5 +5,5 @@ target/
 merged-apis.yaml
 
 # generated sub modules
-ratesheet-api-v1-java-resttemplate/
-!ratesheet-api-v1-java-resttemplate/pom.xml
+ratesheet-api-java-v1-resttemplate/
+!ratesheet-api-java-v1-resttemplate/pom.xml
