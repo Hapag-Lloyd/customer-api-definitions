@@ -24,7 +24,7 @@ RestTemplate. You can include the generated client in your project using the fol
 ```xml
 <dependency>
     <groupId>com.hlag.api</groupId>
-    <artifactId>ratesheet-resttemplate</artifactId>
+    <artifactId>ratesheet-v1-resttemplate</artifactId>
     <version>LATEST VERSION HERE</version>
 </dependency>
 ```
