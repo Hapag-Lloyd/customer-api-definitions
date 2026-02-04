@@ -107,11 +107,11 @@ components:
     Routing:
       type: object
       properties:
-        place_of_receipts:
+        places_of_receipt:
           type: array
           items:
             $ref: "#/components/schemas/Location"
-        place_of_deliveries:
+        places_of_delivery:
           type: array
           items:
             $ref: "#/components/schemas/Location"
