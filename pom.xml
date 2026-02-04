@@ -131,6 +131,7 @@
                                     <output>${project.build.directory}/generated-sources/openapi/ratesheet-api-v1-java-resttemplate</output>
                                     <generatorName>java</generatorName>
                                     <library>resttemplate</library>
+                                    <useJakartaEe>true</useJakartaEe>
                                     <packageName>com.hlag.api.ratesheet.subscription.v1</packageName>
                                     <modelPackage>com.hlag.api.ratesheet.subscription.model.v1</modelPackage>
                                     <apiPackage>com.hlag.api.ratesheet.subscription.v1</apiPackage>
