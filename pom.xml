@@ -127,8 +127,8 @@
                                     <goal>generate</goal>
                                 </goals>
                                 <configuration>
-                                    <inputSpecRootDirectory>${project.basedir}/src/main/openapi/ratesheet</inputSpecRootDirectory>
-                                    <output>${project.build.directory}/generated-sources/openapi/ratesheet-api-java-resttemplate</output>
+                                    <inputSpecRootDirectory>${project.basedir}/src/main/openapi/ratesheet/v1</inputSpecRootDirectory>
+                                    <output>${project.build.directory}/generated-sources/openapi/ratesheet-api-v1-java-resttemplate</output>
                                     <generatorName>java</generatorName>
                                     <library>resttemplate</library>
                                     <packageName>com.hlag.api.ratesheet.subscription.v1</packageName>
