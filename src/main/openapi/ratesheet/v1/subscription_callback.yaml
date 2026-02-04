@@ -3,7 +3,7 @@ openapi: 3.0.3
 
 info:
   title: Subscription Notification API
-  version: 1.0.0
+  version: 1.0.1
   description: >
     API for handling subscription notifications. Called on a regular basis to inform about updates to your subscriptions.
     This API is called by Hapag-Lloyd's systems and needs to be implemented by you to receive subscription notifications.
@@ -107,10 +107,14 @@ components:
     Routing:
       type: object
       properties:
-        place_of_receipt:
-          $ref: "#/components/schemas/Location"
-        place_of_delivery:
-          $ref: "#/components/schemas/Location"
+        places_of_receipt:
+          type: array
+          items:
+            $ref: "#/components/schemas/Location"
+        places_of_delivery:
+          type: array
+          items:
+            $ref: "#/components/schemas/Location"
         equipments:
           type: object
           properties:

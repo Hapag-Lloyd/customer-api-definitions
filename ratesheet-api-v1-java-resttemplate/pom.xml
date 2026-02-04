@@ -9,7 +9,7 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>ratesheet-resttemplate</artifactId>
+  <artifactId>ratesheet-v1-resttemplate</artifactId>
   <packaging>jar</packaging>
-  <name>ratesheet-resttemplate</name>
+  <name>ratesheet-v1-resttemplate</name>
 </project>
