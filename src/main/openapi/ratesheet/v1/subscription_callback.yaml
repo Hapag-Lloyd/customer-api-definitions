@@ -81,6 +81,7 @@ components:
           description: The numerical part of Marketing Routing Party (supplement).
         commercial_reference:
           type: string
+          nullable: true
           description: "Commercial reference: either a quotation number or a contract number"
           example: W230201784558
         routings:
