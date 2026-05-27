@@ -81,7 +81,9 @@ components:
           description: The numerical part of Marketing Routing Party (supplement).
         commercial_reference:
           type: string
-          description: "Commercial reference: either a quotation number or a contract number. Only given if the subscription is based on a single rate sheet."
+          description: |
+            Commercial reference: either a quotation number or a contract number. Only given if the subscription is
+            based on a single rate sheet.
           example: W230201784558
         routings:
           type: array
